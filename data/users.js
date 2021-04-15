@@ -16,7 +16,7 @@ exports.readMyFile = readMyFile;
 
 async function writeToFile(data) {
   return new Promise((resolve, reject) => {
-    fs.writeFile(filePath, JSON.stringify(data, null, 2), (err) => {
+    fs.writeFile(filePath, JSON.stringify(data), (err) => {
       if (err) reject(err);
       else resolve();
     });
@@ -27,8 +27,8 @@ exports.writeToFile = writeToFile;
 
 async function addUser(user) {
   const users = await readMyFile();
-  users.users = user;
-  await writeToFile(user);
+  users.push(user);
+  await writeToFile(users);
 }
 
 exports.addUser = addUser;

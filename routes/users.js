@@ -19,10 +19,22 @@ router.post(
   getValMiddleware(NewUserValSchema),
   async (req, res, next) => {
     try {
-      const { text } = req.body;
+      const {
+        firstName,
+        lastName,
+        email,
+        phone,
+        password,
+        passwordCheck,
+      } = req.body;
       const newUser = {
         id: Date.now(),
-        text,
+        firstName,
+        lastName,
+        email,
+        phone,
+        password,
+        passwordCheck,
         dateCreated: Date.now(),
       };
       await addUser(newUser);
