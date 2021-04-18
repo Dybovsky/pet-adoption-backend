@@ -31,8 +31,23 @@ router.get("/", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
-  const { name_new, price } = req.body;
-  const sql = `INSERT INTO pets (name_new, price) VALUES ('${name_new}', ${price})`;
+  const {
+    name,
+    breed,
+    type,
+    status,
+    picture,
+    height,
+    weight,
+    color,
+    bio,
+    allergy,
+    diet,
+  } = req.body.pet;
+
+  console.log(req.body);
+
+  const sql = `INSERT INTO pets (name, breed, type, status, picture, height, weight, color, bio, allergy, diet) VALUES ('${name}', '${breed}', '${type}', '${status}', '${picture}', ${height}, ${weight}, '${color}', '${bio}', '${allergy}', '${diet}')`;
   await query(sql);
   res.send("Pet added");
   // try {
