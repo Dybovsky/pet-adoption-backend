@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 const { pool, query } = require("../lib/database");
+const SQL = require("@nearform/sql");
+const { getPets, addPet } = require("../data/pets");
 
 // query(
 //   `CREATE TABLE IF NOT EXISTS pets (
@@ -20,7 +22,7 @@ const { pool, query } = require("../lib/database");
 //   });
 
 router.get("/", async (req, res, next) => {
-  const results = await query(`SELECT * FROM pets`);
+  const results = await getPets();
   res.send({ pets: results });
 
   // try {
@@ -45,11 +47,20 @@ router.post("/", async (req, res, next) => {
     diet,
   } = req.body.pet;
 
-  console.log(req.body);
-
-  const sql = `INSERT INTO pets (name, breed, type, status, picture, height, weight, color, bio, allergy, diet) VALUES ('${name}', '${breed}', '${type}', '${status}', '${picture}', ${height}, ${weight}, '${color}', '${bio}', '${allergy}', '${diet}')`;
-  await query(sql);
-  res.send("Pet added");
+  await addPet(
+    name,
+    breed,
+    type,
+    status,
+    picture,
+    height,
+    weight,
+    color,
+    bio,
+    allergy,
+    diet
+  );
+  res.send(`Pet ${name} added`);
   // try {
   //   res.send("post pet works");
   // } catch {
