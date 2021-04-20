@@ -1,17 +1,29 @@
 const { query } = require("../lib/database");
 const SQL = require("@nearform/sql");
+const { CodeGen } = require("ajv");
 
 function addUser(
   email,
   passwordHash,
   passwordHashCheck,
+  phone,
   firstName,
-  lastName,
-  phone
+  lastName
 ) {
   return query(
     SQL`INSERT INTO users (email, password_hash, password_hash_check, phone, firstName, lastName) VALUES (${email}, ${passwordHash}, ${passwordHashCheck}, ${phone}, ${firstName}, ${lastName})`
   );
 }
-
 exports.addUser = addUser;
+
+async function getUserByEmail(email) {
+  const rows = await query(SQL`SELECT * FROM users WHERE email=${email}`);
+  return rows[0];
+}
+exports.getUserByEmail = getUserByEmail;
+
+async function getUsers() {
+  return query(SQL`SELECT * FROM users`);
+}
+
+exports.getUsers = getUsers;
