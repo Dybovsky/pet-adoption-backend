@@ -98,12 +98,25 @@ router.post("/login", async (req, res, next) => {
 });
 
 router.put("/:id", async (req, res, next) => {
-  const { id } = req.params;
-  try {
-    res.json(await updateUser(id, req.body.updatedUser));
-  } catch (err) {
-    next(err);
+  const { authorization } = req.headers;
+  if (!authorization) {
+    res.status(401).send({ message: "Must provide auth header" });
+    return;
   }
+
+  const token = authorization.replace("Bearer ", "");
+  jwt.verify(token, "stringforcrypting", async (err, decoded) => {
+    if (err) {
+      res.status(401).send({ message: "Invalid token" });
+      return;
+    }
+    const { id } = req.params;
+    try {
+      res.json(await updateUser(id, req.body.updatedUser));
+    } catch (err) {
+      next(err);
+    }
+  });
 });
 
 module.exports = router;
