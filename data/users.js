@@ -27,3 +27,11 @@ async function getUsers() {
 }
 
 exports.getUsers = getUsers;
+
+async function updateUser(id, updatedUser) {
+  console.log(updatedUser);
+  const result = await query(
+    SQL`UPDATE users SET firstName = ${updatedUser.firstName}, lastName=${updatedUser.lastName}, email=${updatedUser.email},phone=${updatedUser.phone}, password_hash=${updatedUser.password} WHERE id = ${id}`
+  );
+}
+exports.updateUser = updateUser;
