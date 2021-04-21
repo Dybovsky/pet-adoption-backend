@@ -46,16 +46,6 @@ router.post(
         password,
         passwordCheck,
       } = req.body;
-      // const newUser = {
-      //   id: Date.now(),
-      //   firstName,
-      //   lastName,
-      //   email,
-      //   phone,
-      //   password,
-      //   passwordCheck,
-      //   dateCreated: Date.now(),
-      // };
       bcrypt.hash(password, 10, async (err, hash) => {
         if (err) next(err);
         else {
@@ -63,7 +53,7 @@ router.post(
           res.send({ user: { email } });
         }
       });
-      //res.send({ user: newUser });
+      res.send({ user: newUser });
     } catch (error) {
       next(error);
     }
@@ -77,7 +67,8 @@ router.post("/login", async (req, res, next) => {
   if (!user) {
     res.status(404).send("No user with this email");
     return;
-  }
+  } //
+
   bcrypt.compare(password, user.password_hash, (err, result) => {
     if (err) next(err);
     else {

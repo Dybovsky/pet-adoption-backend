@@ -35,3 +35,9 @@ async function updateUser(id, updatedUser) {
   );
 }
 exports.updateUser = updateUser;
+
+async function getUserById(userId) {
+  const rows = await query(SQL`SELECT * FROM users WHERE id=${userId}`);
+  return rows[0];
+}
+exports.getUserById = getUserById;

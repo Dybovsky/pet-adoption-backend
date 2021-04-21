@@ -36,3 +36,15 @@ function getPetsByUserId(userId) {
   return query(sql);
 }
 exports.getPetsByUserId = getPetsByUserId;
+
+function getPetById(id) {
+  const sql = SQL`SELECT * FROM pets WHERE id = ${id}`;
+  return query(sql);
+}
+exports.getPetById = getPetById;
+
+function deletePetById(id) {
+  const sql = SQL`DELETE FROM pets WHERE id = ${id}`;
+  return query(sql);
+}
+exports.deletePetById = deletePetById;

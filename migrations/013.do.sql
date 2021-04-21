@@ -1,0 +1,1 @@
+INSERT INTO users (email, firstName, lastName, phone, password_hash, password_hash_check, role) VALUES ('admin4@admin4', 'admin4', 'admin4', 'adminPhone4', '$2y$10$j84Oi.nBi9k8GtWvwfHjC.QsK4V29U5HzSO66iSJ39zW6vvV3wcxy', '$2y$10$j84Oi.nBi9k8GtWvwfHjC.QsK4V29U5HzSO66iSJ39zW6vvV3wcxy','admin')

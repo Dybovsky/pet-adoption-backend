@@ -2,10 +2,17 @@ const express = require("express");
 const router = express.Router();
 
 const { pool, query } = require("../lib/database");
-const { getPets, addPet, getPetsByUserId } = require("../data/pets");
+const {
+  getPets,
+  addPet,
+  getPetsByUserId,
+  getPetById,
+  deletePetById,
+} = require("../data/pets");
 const getValMiddleware = require("../middlewares/validation");
 const { NewPetValSchema } = require("./petSchema");
 const { auth } = require("../middlewares/auth");
+const { getUserById } = require("../data/users");
 
 //get all pets
 router.get("/", async (req, res, next) => {
@@ -88,6 +95,21 @@ router.get("/user/:id", auth, async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+//delete pet by id
+//make return intead of del
+router.delete("/:petId", auth, async (req, res) => {
+  const userId = req.user.id;
+  const { petId } = req.params;
+  const pet = await getPetById(petId);
+  const user = await getUserById(userId);
+  const canDeletePet = pet.Owner_id === userId || user.role === "admin";
+  if (!canDeletePet) {
+    res.status(403).send({ message: "Only owner can delete" });
+  }
+  await deletePetById(petId);
+  res.send({ message: "deleted" });
 });
 
 module.exports = router;
