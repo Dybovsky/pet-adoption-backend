@@ -24,3 +24,15 @@ function addPet(
   return query(sql);
 }
 exports.addPet = addPet;
+
+async function savePet(petId, userId) {
+  const result = await SQL`UPDATE pets SET Saved_by_Id = ${userId} WHERE id = ${petId}`;
+}
+exports.savePet = savePet;
+
+function getPetsByUserId(userId) {
+  // console.log(userId);
+  const sql = SQL`SELECT * FROM pets WHERE Owner_id = ${userId}`;
+  return query(sql);
+}
+exports.getPetsByUserId = getPetsByUserId;

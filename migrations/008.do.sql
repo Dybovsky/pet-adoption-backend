@@ -1,0 +1,1 @@
+ALTER TABLE users ADD COLUMN my_pets VARCHAR(100);
