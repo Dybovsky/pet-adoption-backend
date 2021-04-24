@@ -1,0 +1,34 @@
+{
+  "name": "pet-adoption-backend-dybovsky",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/israeltechchallenge/pet-adoption-backend-Dybovsky.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/israeltechchallenge/pet-adoption-backend-Dybovsky/issues"
+  },
+  "homepage": "https://github.com/israeltechchallenge/pet-adoption-backend-Dybovsky#readme",
+  "dependencies": {
+    "@nearform/sql": "^1.5.1",
+    "ajv": "^8.1.0",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "fluent-json-schema": "^2.0.4",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
+    "postgrator": "^4.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
