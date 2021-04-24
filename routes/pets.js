@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const fs = require("fs");
 
+const { uploadToCloudinary } = require("../lib/cloudinary");
 const { pool, query } = require("../lib/database");
 const {
   getPets,
@@ -8,10 +10,14 @@ const {
   getPetsByUserId,
   getPetById,
   deletePetById,
+  updatePetPicture,
 } = require("../data/pets");
+//const { host, port } = require("../server");
+const { isAdmin } = require("../middlewares/admin");
+const { upload } = require("../middlewares/multipart");
 const getValMiddleware = require("../middlewares/validation");
-const { NewPetValSchema } = require("./petSchema");
 const { auth } = require("../middlewares/auth");
+const { NewPetValSchema } = require("./petSchema");
 const { getUserById } = require("../data/users");
 
 //get all pets
@@ -24,41 +30,76 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-//add pet
-router.post("/", getValMiddleware(NewPetValSchema), async (req, res, next) => {
-  try {
-    const {
-      name,
-      breed,
-      type,
-      status,
-      picture,
-      height,
-      weight,
-      color,
-      bio,
-      allergy,
-      diet,
-    } = req.body;
+// app.post("/uploadFile", upload.single("my_file"), async (req, res) => {
+//   res.send("uploaded");
+// });
 
-    await addPet(
-      name,
-      breed,
-      type,
-      status,
-      picture,
-      height,
-      weight,
-      color,
-      bio,
-      allergy,
-      diet
-    );
-    res.send(`Pet ${name} added`);
-  } catch (err) {
-    next(err);
+//add pet
+router.post(
+  "/",
+  //getValMiddleware(NewPetValSchema),
+  //auth,
+  //upload.single("my_file"),
+  isAdmin,
+  async (req, res, next) => {
+    try {
+      const {
+        name,
+        breed,
+        type,
+        status,
+        picture,
+        height,
+        weight,
+        color,
+        bio,
+        allergy,
+        diet,
+      } = req.body;
+
+      await addPet(
+        name,
+        breed,
+        type,
+        status,
+        picture,
+        height,
+        weight,
+        color,
+        bio,
+        allergy,
+        diet
+      );
+      res.send(`Pet ${name} added`);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
+
+//or isAdmin middleware must use for chnge user settings
+function isSameUser(req, res, next) {
+  if (req.user.id !== req.params.userId) {
+    res.status(403).send({ message: "Only the same user can access" });
+    return;
+  }
+  next();
+}
+//
+router.put(
+  "/:petID/picture",
+  // "/:userId/picture",
+  // isSameUser 40 min
+  auth,
+  upload.single("image"),
+  async (req, res) => {
+    const result = await uploadToCloudinary(req.file.path);
+    await updatePetPicture(req.params.petID, result.secure_url);
+    fs.unlinkSync(req.file.path);
+    res.send({ pictureUrl: result.secure_url });
+  }
+  // frontend formData.append
+);
 
 //save pet
 // router.put(':id/save', async(req, res, next) => {

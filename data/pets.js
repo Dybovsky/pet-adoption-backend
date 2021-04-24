@@ -48,3 +48,9 @@ function deletePetById(id) {
   return query(sql);
 }
 exports.deletePetById = deletePetById;
+
+function updatePetPicture(petId, picture) {
+  const sql = SQL`UPDATE pets SET picture = ${picture} WHERE id = ${petId}`;
+  return query(sql);
+}
+exports.updatePetPicture = updatePetPicture;
