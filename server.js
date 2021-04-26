@@ -1,3 +1,12 @@
+const path = require("path");
+const result = require("dotenv").config({
+  path: path.join(__dirname, `./.env.${process.env.NODE_ENV}`),
+});
+
+if (result.error) {
+  throw new Error(result.error);
+}
+
 const express = require("express");
 const cors = require("cors");
 
@@ -19,8 +28,8 @@ app.use("/pet", require("./routes/pets"));
 app.use("/" + uploadedFilesFolder, express.static(uploadedFilesFolder));
 //
 
-const port = "5500";
-const host = "127.0.0.1";
+const port = +process.env.PORT;
+const host = process.env.HOST;
 exports.port = port;
 exports.host = host;
 

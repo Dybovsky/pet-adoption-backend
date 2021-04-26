@@ -37,10 +37,10 @@ router.get("/", async (req, res, next) => {
 //add pet
 router.post(
   "/",
-  //getValMiddleware(NewPetValSchema),
-  //auth,
-  //upload.single("my_file"),
+  getValMiddleware(NewPetValSchema),
+  auth,
   isAdmin,
+  upload.single("my_file"),
   async (req, res, next) => {
     try {
       const {
@@ -115,7 +115,7 @@ router.put(
 router.get("/user/my", auth, async (req, res, next) => {
   try {
     const userId = req.user.id;
-    console.log(111, userId);
+
     const usersPets = await getPetsByUserId(userId);
 
     res.send({ usersPets });
@@ -130,7 +130,7 @@ router.get("/user/:id", auth, async (req, res, next) => {
   try {
     const userId = req.params;
     //req.user.id;
-    console.log(222, userId);
+
     const usersPets = await getPetsByUserId(userId);
     res.send({ usersPets });
   } catch (err) {
@@ -154,3 +154,15 @@ router.delete("/:petId", auth, async (req, res) => {
 });
 
 module.exports = router;
+
+//get pet bi id
+router.get("/:petId", auth, async (req, res) => {
+  try {
+    const { petId } = req.params;
+    const response = await getPetById(petId);
+    console.log(response, "resp");
+    res.send({ response });
+  } catch (err) {
+    console.error(err);
+  }
+});

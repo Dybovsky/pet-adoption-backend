@@ -9,7 +9,7 @@ function auth(req, res, next) {
 
   const token = authorization.replace("Bearer ", "");
 
-  jwt.verify(token, "stringforcrypting", async (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
       res.status(401).send({ message: "Invalid token" });
       return;
