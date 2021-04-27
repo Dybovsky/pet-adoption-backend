@@ -166,3 +166,16 @@ router.get("/:petId", auth, async (req, res) => {
     console.error(err);
   }
 });
+
+//edit pet
+router.put("/pet/:petId", auth, isAdmin, async (req, res) => {
+  try {
+    const { editedPet } = req.body;
+    const { petId } = req.params;
+    const response = await editPet(petId, editedPet);
+    console.log(response, "resp");
+    res.send({ response });
+  } catch (err) {
+    console.error(err);
+  }
+});

@@ -54,3 +54,32 @@ function updatePetPicture(petId, picture) {
   return query(sql);
 }
 exports.updatePetPicture = updatePetPicture;
+
+function updatePet(petId, editedPet) {
+  const {
+    name,
+    breed,
+    type,
+    status,
+    picture,
+    height,
+    weight,
+    color,
+    bio,
+    allergy,
+    diet,
+  } = editedPet;
+  const sql = SQL`UPDATE pets SET name = ${name}, breed = ${breed},
+  type = ${type},
+  status = ${status},
+  picture = ${picture},
+  height = ${height},
+  weight = ${weight},
+  color = ${color},
+  bio = ${bio},
+  allergy = ${allergy},
+  diet = ${diet}
+  WHERE id = ${petId}`;
+  return query(sql);
+}
+exports.updatePet = updatePet;
