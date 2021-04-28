@@ -11,6 +11,7 @@ const {
   getPetById,
   deletePetById,
   updatePetPicture,
+  updatePet,
 } = require("../data/pets");
 //const { host, port } = require("../server");
 const { isAdmin } = require("../middlewares/admin");
@@ -40,7 +41,7 @@ router.post(
   getValMiddleware(NewPetValSchema),
   auth,
   isAdmin,
-  upload.single("my_file"),
+  upload.single("image"),
   async (req, res, next) => {
     try {
       const {
@@ -70,6 +71,7 @@ router.post(
         allergy,
         diet
       );
+      // console.log("posted");
       res.send(`Pet ${name} added`);
     } catch (err) {
       next(err);
@@ -87,16 +89,22 @@ function isSameUser(req, res, next) {
 }
 //
 router.put(
-  "/:petID/picture",
+  "/picture/:petID",
   // "/:userId/picture",
   // isSameUser 40 min
   auth,
   upload.single("image"),
   async (req, res) => {
-    const result = await uploadToCloudinary(req.file.path);
-    await updatePetPicture(req.params.petID, result.secure_url);
-    fs.unlinkSync(req.file.path);
-    res.send({ pictureUrl: result.secure_url });
+    try {
+      // console.log("req", req.params);
+      const result = await uploadToCloudinary(req.file.path);
+      // console.log(result, "res");
+      await updatePetPicture(req.params.petID, result.secure_url);
+      fs.unlinkSync(req.file.path);
+      res.send({ picture: result.secure_url });
+    } catch (err) {
+      console.error(err);
+    }
   }
   // frontend formData.append
 );
@@ -153,14 +161,12 @@ router.delete("/:petId", auth, async (req, res) => {
   res.send({ message: "deleted" });
 });
 
-module.exports = router;
-
 //get pet bi id
 router.get("/:petId", auth, async (req, res) => {
   try {
     const { petId } = req.params;
     const response = await getPetById(petId);
-    console.log(response, "resp");
+    // console.log(response, "resp");
     res.send({ response });
   } catch (err) {
     console.error(err);
@@ -168,14 +174,23 @@ router.get("/:petId", auth, async (req, res) => {
 });
 
 //edit pet
-router.put("/pet/:petId", auth, isAdmin, async (req, res) => {
-  try {
-    const { editedPet } = req.body;
-    const { petId } = req.params;
-    const response = await editPet(petId, editedPet);
-    console.log(response, "resp");
-    res.send({ response });
-  } catch (err) {
-    console.error(err);
+router.put(
+  "/:petId",
+  auth,
+  isAdmin,
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      const { editedPet } = req.body;
+      const { petId } = req.params;
+      console.log("body", req.body);
+      const response = await updatePet(petId, editedPet);
+      // console.log(response, "resp");
+      res.send({ response });
+    } catch (err) {
+      console.error(err);
+    }
   }
-});
+);
+
+module.exports = router;

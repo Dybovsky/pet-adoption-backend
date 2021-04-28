@@ -49,8 +49,9 @@ function deletePetById(id) {
 }
 exports.deletePetById = deletePetById;
 
-function updatePetPicture(petId, picture) {
-  const sql = SQL`UPDATE pets SET picture = ${picture} WHERE id = ${petId}`;
+async function updatePetPicture(petId, picture) {
+  // console.log("lol", petId, picture);
+  const sql = await SQL`UPDATE pets SET picture = ${picture} WHERE id = ${petId}`;
   return query(sql);
 }
 exports.updatePetPicture = updatePetPicture;
@@ -69,6 +70,7 @@ function updatePet(petId, editedPet) {
     allergy,
     diet,
   } = editedPet;
+
   const sql = SQL`UPDATE pets SET name = ${name}, breed = ${breed},
   type = ${type},
   status = ${status},

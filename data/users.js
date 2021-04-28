@@ -40,3 +40,9 @@ async function getUserById(userId) {
   return rows[0];
 }
 exports.getUserById = getUserById;
+
+function deleteUser(id) {
+  const sql = SQL`DELETE FROM users WHERE id = ${id}`;
+  return query(sql);
+}
+exports.deleteUser = deleteUser;

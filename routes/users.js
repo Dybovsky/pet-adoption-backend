@@ -10,8 +10,11 @@ const {
   getUserByEmail,
   getUsers,
   updateUser,
+  deleteUser,
+  getUserById,
 } = require("../data/users");
 const { auth } = require("../middlewares/auth");
+const { isAdmin } = require("../middlewares/admin");
 
 //get /users/
 router.get("/", async (req, res, next) => {
@@ -53,7 +56,7 @@ router.post(
           res.send({ user: { email } });
         }
       });
-      res.send({ user: newUser });
+      // res.send({ user: newUser });
     } catch (error) {
       next(error);
     }
@@ -94,10 +97,24 @@ router.put("/:id", auth, async (req, res, next) => {
   const { id } = req.params;
   // const { id } = req.user.id
   try {
-    res.json(await updateUser(id, req.body.updatedUser));
+    res.json(await updateUser(id, req.body.editedUser));
   } catch (err) {
     next(err);
   }
+});
+
+router.delete("/:userId", auth, async (req, res) => {
+  const curUserId = req.user.id;
+  const { userId } = req.params;
+
+  // const pet = await getPetById(petId);
+  const user = await getUserById(curUserId);
+  const canDeleteUser = user.role === "admin";
+  if (!canDeleteUser) {
+    res.status(403).send({ message: "Only owner can delete" });
+  }
+  await deleteUser(userId);
+  res.send({ message: "deleted" });
 });
 
 module.exports = router;
