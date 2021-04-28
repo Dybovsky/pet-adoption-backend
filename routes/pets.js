@@ -12,6 +12,7 @@ const {
   deletePetById,
   updatePetPicture,
   updatePet,
+  addOwner,
 } = require("../data/pets");
 //const { host, port } = require("../server");
 const { isAdmin } = require("../middlewares/admin");
@@ -72,7 +73,7 @@ router.post(
         diet
       );
       // console.log("posted");
-      res.send(`Pet ${name} added`);
+      res.status(201).send(`Pet ${name} added`);
     } catch (err) {
       next(err);
     }
@@ -149,16 +150,20 @@ router.get("/user/:id", auth, async (req, res, next) => {
 //delete pet by id
 //make return intead of del
 router.delete("/:petId", auth, async (req, res) => {
-  const userId = req.user.id;
-  const { petId } = req.params;
-  const pet = await getPetById(petId);
-  const user = await getUserById(userId);
-  const canDeletePet = pet.Owner_id === userId || user.role === "admin";
-  if (!canDeletePet) {
-    res.status(403).send({ message: "Only owner can delete" });
+  try {
+    const userId = req.user.id;
+    const { petId } = req.params;
+    const pet = await getPetById(petId);
+    const user = await getUserById(userId);
+    const canDeletePet = pet.Owner_id === userId || user.role === "admin";
+    if (!canDeletePet) {
+      res.status(403).send({ message: "Only owner can delete" });
+    }
+    await deletePetById(petId);
+    res.send({ message: "deleted" });
+  } catch (err) {
+    console.log(err);
   }
-  await deletePetById(petId);
-  res.send({ message: "deleted" });
 });
 
 //get pet bi id
@@ -192,5 +197,21 @@ router.put(
     }
   }
 );
+
+//foster adopt return api
+
+router.post("/:petId/adopt", auth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { petId } = req.params;
+    //const pet = await getPetById(petId)
+    addOwner(petId, userId);
+
+    res.status(201).send(`user ${userId} now own this pet`);
+    //addToMyPets(petId)
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 module.exports = router;

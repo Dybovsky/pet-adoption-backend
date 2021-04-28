@@ -85,3 +85,13 @@ function updatePet(petId, editedPet) {
   return query(sql);
 }
 exports.updatePet = updatePet;
+
+// function addToMyPets(petId){
+//   const sql = SQL``
+// }
+
+function addOwner(petId, userId) {
+  const sql = SQL`UPDATE pets SET Owner_Id = ${userId} WHERE id = ${petId}`;
+  return query(sql);
+}
+exports.addOwner = addOwner;
