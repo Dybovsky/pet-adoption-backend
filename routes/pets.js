@@ -13,6 +13,8 @@ const {
   updatePetPicture,
   updatePet,
   addOwner,
+  changeStatus,
+  returnPet,
 } = require("../data/pets");
 //const { host, port } = require("../server");
 const { isAdmin } = require("../middlewares/admin");
@@ -97,8 +99,8 @@ router.put(
   upload.single("image"),
   async (req, res) => {
     try {
-      // console.log("req", req.params);
       const result = await uploadToCloudinary(req.file.path);
+      // console.log("res", result.secure_url);
       // console.log(result, "res");
       await updatePetPicture(req.params.petID, result.secure_url);
       fs.unlinkSync(req.file.path);
@@ -178,7 +180,7 @@ router.get("/:petId", auth, async (req, res) => {
   }
 });
 
-//edit pet
+// edit pet
 router.put(
   "/:petId",
   auth,
@@ -188,8 +190,9 @@ router.put(
     try {
       const { editedPet } = req.body;
       const { petId } = req.params;
-      console.log("body", req.body);
-      const response = await updatePet(petId, editedPet);
+      // console.log("body", req.body);
+
+      //const response = await updatePet(petId, editedPet);
       // console.log(response, "resp");
       res.send({ response });
     } catch (err) {
@@ -204,11 +207,27 @@ router.post("/:petId/adopt", auth, async (req, res) => {
   try {
     const userId = req.user.id;
     const { petId } = req.params;
-    //const pet = await getPetById(petId)
+    // const pet = await getPetById(petId)
+    // if (!pet.Owner_id === null){
+    //   return;
+    //   res.send({message: 'Some'})
+    // }
     addOwner(petId, userId);
+    changeStatus(petId, "adopted");
 
     res.status(201).send(`user ${userId} now own this pet`);
     //addToMyPets(petId)
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.post("/:petId/return", auth, async (req, res) => {
+  try {
+    const { petId } = req.params;
+
+    returnPet(petId);
+    res.status(201).send(`pet returned`);
   } catch (err) {
     console.log(err);
   }

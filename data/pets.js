@@ -95,3 +95,15 @@ function addOwner(petId, userId) {
   return query(sql);
 }
 exports.addOwner = addOwner;
+
+function changeStatus(petId, status) {
+  const sql = SQL`UPDATE pets SET status = ${status} WHERE id = ${petId}`;
+  return query(sql);
+}
+exports.changeStatus = changeStatus;
+
+function returnPet(petId) {
+  const sql = SQL`UPDATE pets SET status = "Take me!", Owner_Id = null WHERE id = ${petId}`;
+  return query(sql);
+}
+exports.returnPet = returnPet;
