@@ -203,17 +203,17 @@ router.put(
 
 //foster adopt return api
 
-router.post("/:petId/adopt", auth, async (req, res) => {
+router.post("/take_pet/:petId/:status", auth, async (req, res) => {
   try {
     const userId = req.user.id;
-    const { petId } = req.params;
+    const { petId, status } = req.params;
     // const pet = await getPetById(petId)
     // if (!pet.Owner_id === null){
     //   return;
     //   res.send({message: 'Some'})
     // }
     addOwner(petId, userId);
-    changeStatus(petId, "adopted");
+    changeStatus(petId, status);
 
     res.status(201).send(`user ${userId} now own this pet`);
     //addToMyPets(petId)
@@ -222,7 +222,7 @@ router.post("/:petId/adopt", auth, async (req, res) => {
   }
 });
 
-router.post("/:petId/return", auth, async (req, res) => {
+router.post("/return/:petId/", auth, async (req, res) => {
   try {
     const { petId } = req.params;
 
