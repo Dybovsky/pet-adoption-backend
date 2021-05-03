@@ -10,7 +10,7 @@ const NewPetValSchema = S.object()
   .prop("weight", S.string().minLength(1).required())
   .prop("color", S.string().minLength(1).required())
   .prop("bio", S.string().minLength(1).required())
-  .prop("allergy", S.string().minLength(1).required())
+  .prop("allergy", S.boolean().required())
   .prop("diet", S.string().minLength(1).required())
   .valueOf();
 

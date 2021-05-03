@@ -107,3 +107,9 @@ function returnPet(petId) {
   return query(sql);
 }
 exports.returnPet = returnPet;
+
+function getPetByType(type) {
+  const sql = SQL`SELECT * FROM pets WHERE type = ${type}`;
+  return query(sql);
+}
+exports.getPetByType = getPetByType;

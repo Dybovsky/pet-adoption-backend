@@ -53,7 +53,10 @@ router.post(
         if (err) next(err);
         else {
           await addUser(email, hash, hash, phone, firstName, lastName);
-          res.send({ user: { email } });
+          const user = await getUserByEmail(email);
+          const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+          // console.log("user", user);
+          res.send({ user: { email, token } });
         }
       });
       // res.send({ user: newUser });

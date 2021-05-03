@@ -15,6 +15,7 @@ const {
   addOwner,
   changeStatus,
   returnPet,
+  getPetByType,
 } = require("../data/pets");
 //const { host, port } = require("../server");
 const { isAdmin } = require("../middlewares/admin");
@@ -168,8 +169,8 @@ router.delete("/:petId", auth, async (req, res) => {
   }
 });
 
-//get pet bi id
-router.get("/:petId", auth, async (req, res) => {
+// get pet bi id
+router.get("/:petId", async (req, res) => {
   try {
     const { petId } = req.params;
     const response = await getPetById(petId);
@@ -230,6 +231,16 @@ router.post("/return/:petId/", auth, async (req, res) => {
     res.status(201).send(`pet returned`);
   } catch (err) {
     console.log(err);
+  }
+});
+
+router.get("/query/type=:type", async (req, res) => {
+  try {
+    const { type } = req.params;
+    const response = await getPetByType(type);
+    res.send({ response });
+  } catch (err) {
+    console.error(err);
   }
 });
 
