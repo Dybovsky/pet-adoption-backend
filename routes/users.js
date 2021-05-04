@@ -98,12 +98,16 @@ router.post("/login", async (req, res, next) => {
 //update User
 router.put("/:id", auth, async (req, res, next) => {
   const { id } = req.params;
-  // const { id } = req.user.id
-  try {
-    res.json(await updateUser(id, req.body.editedUser));
-  } catch (err) {
-    next(err);
-  }
+  bcrypt.hash(req.body.editedUser.password, 10, async (err, hash) => {
+    req.body.editedUser.password = hash;
+    req.body.editedUser.passwordCheck = hash;
+    // const { id } = req.user.id
+    try {
+      res.json(await updateUser(id, req.body.editedUser));
+    } catch (err) {
+      next(err);
+    }
+  });
 });
 
 router.delete("/:userId", auth, async (req, res) => {
