@@ -109,9 +109,37 @@ function returnPet(petId) {
 exports.returnPet = returnPet;
 
 function getPetsByAdvSearch(searchObj) {
+  // const sql = SQL`SELECT * FROM pets WHERE `;
+  // const updates = [];
+  // for (let item in searchObj) {
+  //   if (searchObj[item] !== "" && searchObj[item] !== "0")
+  //     updates.push(SQL`${item} = ${searchObj[item]}`);
+  // }
+
+  // sql.append(sql.glue(updates, " AND "));
+
+  // console.log(query(sql));
+  // return query(sql);
+
+  const sql = SQL`SELECT * FROM pets WHERE `;
   const { type, status, height, weight, name } = searchObj;
-  const sql = SQL`SELECT * FROM pets WHERE type = ${type} AND status=${status} AND height=${height} AND weight=${weight} AND name=${name}`;
+  const updates = [];
+  if (type !== "") updates.push(SQL`type = ${type}`);
+  if (status !== "") updates.push(SQL`status = ${status}`);
+  if (height !== "0") updates.push(SQL`height = ${height}`);
+  if (weight !== "0") updates.push(SQL`weight = ${weight}`);
+  if (name !== "") updates.push(SQL`name = ${name}`);
+
+  sql.append(sql.glue(updates, " AND "));
+
+  console.log("sql", sql);
   return query(sql);
+
+  //
+
+  // const { type, status, height, weight, name } = searchObj;
+  // const sql = SQL`SELECT * FROM pets WHERE type = ${type} AND status=${status} AND height=${height} AND weight=${weight} AND name=${name}`;
+  // return query(sql);
 }
 exports.getPetsByAdvSearch = getPetsByAdvSearch;
 
