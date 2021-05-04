@@ -108,8 +108,15 @@ function returnPet(petId) {
 }
 exports.returnPet = returnPet;
 
-function getPetByType(type) {
-  const sql = SQL`SELECT * FROM pets WHERE type = ${type}`;
+function getPetsByAdvSearch(searchObj) {
+  const { type, status, height, weight, name } = searchObj;
+  const sql = SQL`SELECT * FROM pets WHERE type = ${type} AND status=${status} AND height=${height} AND weight=${weight} AND name=${name}`;
   return query(sql);
 }
-exports.getPetByType = getPetByType;
+exports.getPetsByAdvSearch = getPetsByAdvSearch;
+
+// function getPetByType(type) {
+//   const sql = SQL`SELECT * FROM pets WHERE type = ${type}`;
+//   return query(sql);
+// }
+// exports.getPetByType = getPetByType;

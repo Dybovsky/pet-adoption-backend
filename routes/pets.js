@@ -16,6 +16,7 @@ const {
   changeStatus,
   returnPet,
   getPetByType,
+  getPetsByAdvSearch,
 } = require("../data/pets");
 //const { host, port } = require("../server");
 const { isAdmin } = require("../middlewares/admin");
@@ -25,7 +26,7 @@ const { auth } = require("../middlewares/auth");
 const { NewPetValSchema } = require("./petSchema");
 const { getUserById } = require("../data/users");
 
-//get all pets
+// get all pets
 router.get("/", async (req, res, next) => {
   try {
     const results = await getPets();
@@ -170,7 +171,7 @@ router.delete("/:petId", auth, async (req, res) => {
 });
 
 // get pet bi id
-router.get("/:petId", async (req, res) => {
+router.get("/getPet/:petId", async (req, res) => {
   try {
     const { petId } = req.params;
     const response = await getPetById(petId);
@@ -234,14 +235,23 @@ router.post("/return/:petId/", auth, async (req, res) => {
   }
 });
 
-router.get("/query/type=:type", async (req, res) => {
+router.get("/query", async (req, res) => {
   try {
-    const { type } = req.params;
-    const response = await getPetByType(type);
-    res.send({ response });
+    const response = await getPetsByAdvSearch(req.query);
+
+    res.send(response);
   } catch (err) {
     console.error(err);
   }
 });
 
+// router.get("/query/type=:type", async (req, res) => {
+//   try {
+//     const { type } = req.params;
+//     const response = await getPetByType(type);
+//     res.send({ response });
+//   } catch (err) {
+//     console.error(err);
+//   }
+// });
 module.exports = router;
