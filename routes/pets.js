@@ -18,6 +18,8 @@ const {
   getPetByType,
   getPetsByAdvSearch,
   savePet,
+  unsavePet,
+  getSavedPets,
 } = require("../data/pets");
 //const { host, port } = require("../server");
 const { isAdmin } = require("../middlewares/admin");
@@ -252,6 +254,27 @@ router.post("/save/:petId/", auth, async (req, res) => {
     const userId = req.user.id;
     const { id } = req.body;
     savePet(id, userId, petId);
+    res.send({ id });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+router.delete("/unsave/:id/", auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    unsavePet(id);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+router.get("/saved_pets/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const response = await getSavedPets(userId);
+    // console.log(response, "resp");
+    res.send(response);
   } catch (err) {
     console.error(err);
   }

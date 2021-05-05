@@ -142,6 +142,19 @@ function savePet(id, userId, petId) {
   return query(sql);
 }
 exports.savePet = savePet;
+
+function unsavePet(id) {
+  const sql = SQL`DELETE FROM saved_pets WHERE id = ${id}`;
+  return query(sql);
+}
+exports.unsavePet = unsavePet;
+
+function getSavedPets(userId) {
+  const sql = SQL`SELECT * FROM pets INNER JOIN saved_pets ON pets.id = saved_pets.pet_id WHERE user_id = ${userId}`;
+  return query(sql);
+}
+exports.getSavedPets = getSavedPets;
+
 // function getPetByType(type) {
 //   const sql = SQL`SELECT * FROM pets WHERE type = ${type}`;
 //   return query(sql);
