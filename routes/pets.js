@@ -17,6 +17,7 @@ const {
   returnPet,
   getPetByType,
   getPetsByAdvSearch,
+  savePet,
 } = require("../data/pets");
 //const { host, port } = require("../server");
 const { isAdmin } = require("../middlewares/admin");
@@ -240,6 +241,17 @@ router.get("/query", async (req, res) => {
     const response = await getPetsByAdvSearch(req.query);
 
     res.send(response);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+router.post("/save/:petId/", auth, async (req, res) => {
+  try {
+    const { petId } = req.params;
+    const userId = req.user.id;
+    const { id } = req.body;
+    savePet(id, userId, petId);
   } catch (err) {
     console.error(err);
   }

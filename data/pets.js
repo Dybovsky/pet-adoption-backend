@@ -25,11 +25,6 @@ function addPet(
 }
 exports.addPet = addPet;
 
-async function savePet(petId, userId) {
-  const result = await SQL`UPDATE pets SET Saved_by_Id = ${userId} WHERE id = ${petId}`;
-}
-exports.savePet = savePet;
-
 function getPetsByUserId(userId) {
   // console.log(userId);
   const sql = SQL`SELECT * FROM pets WHERE Owner_id = ${userId}`;
@@ -132,7 +127,6 @@ function getPetsByAdvSearch(searchObj) {
 
   sql.append(sql.glue(updates, " AND "));
 
-  console.log("sql", sql);
   return query(sql);
 
   //
@@ -143,6 +137,11 @@ function getPetsByAdvSearch(searchObj) {
 }
 exports.getPetsByAdvSearch = getPetsByAdvSearch;
 
+function savePet(id, userId, petId) {
+  const sql = SQL`INSERT INTO saved_pets (id, user_id, pet_id) VALUES (${id}, ${userId}, ${petId})`;
+  return query(sql);
+}
+exports.savePet = savePet;
 // function getPetByType(type) {
 //   const sql = SQL`SELECT * FROM pets WHERE type = ${type}`;
 //   return query(sql);

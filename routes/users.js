@@ -27,8 +27,8 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/:email", async (req, res, next) => {
-  const { email } = req.params;
   try {
+    const { email } = req.params;
     const user = await getUserByEmail(email);
     res.send({ user });
   } catch (err) {
