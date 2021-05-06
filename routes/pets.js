@@ -20,6 +20,7 @@ const {
   savePet,
   unsavePet,
   getSavedPets,
+  getAuthPets,
 } = require("../data/pets");
 //const { host, port } = require("../server");
 const { isAdmin } = require("../middlewares/admin");
@@ -33,6 +34,16 @@ const { getUserById } = require("../data/users");
 router.get("/", async (req, res, next) => {
   try {
     const results = await getPets();
+    res.send({ pets: results });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get("/all_pets/", auth, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const results = await getAuthPets(userId);
     res.send({ pets: results });
   } catch (err) {
     next(err);

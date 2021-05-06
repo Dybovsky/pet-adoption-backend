@@ -7,6 +7,14 @@ function getPets() {
 
 exports.getPets = getPets;
 
+function getAuthPets(userId) {
+  return query(
+    SQL`SELECT pets.* ,CASE WHEN sp.user_id IS null THEN false ELSE true END AS saved FROM pets LEFT JOIN saved_pets AS sp ON pets.id = sp.pet_id AND sp.user_id = ${userId}`
+  );
+}
+
+exports.getAuthPets = getAuthPets;
+
 function addPet(
   name,
   breed,
@@ -27,9 +35,10 @@ exports.addPet = addPet;
 
 function getPetsByUserId(userId) {
   // console.log(userId);
-  const sql = SQL`SELECT * FROM pets WHERE Owner_id = ${userId}`;
+  const sql = SQL`SELECT pets.* ,CASE WHEN sp.user_id IS null THEN false ELSE true END AS saved FROM pets LEFT JOIN saved_pets AS sp ON pets.id = sp.pet_id AND sp.user_id = ${userId} WHERE Owner_id = ${userId}`;
   return query(sql);
 }
+
 exports.getPetsByUserId = getPetsByUserId;
 
 function getPetById(id) {
@@ -150,7 +159,8 @@ function unsavePet(id) {
 exports.unsavePet = unsavePet;
 
 function getSavedPets(userId) {
-  const sql = SQL`SELECT * FROM pets INNER JOIN saved_pets ON pets.id = saved_pets.pet_id WHERE user_id = ${userId}`;
+  const sql = SQL`SELECT pets.* ,CASE WHEN sp.user_id IS null THEN false ELSE true END AS saved FROM pets JOIN saved_pets AS sp ON pets.id = sp.pet_id  WHERE user_id = ${userId}`;
+
   return query(sql);
 }
 exports.getSavedPets = getSavedPets;
