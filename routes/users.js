@@ -38,7 +38,7 @@ router.get("/:email", async (req, res, next) => {
 
 router.post(
   "/signup",
-  getValMiddleware(NewUserValSchema), //dont work proper
+  getValMiddleware(NewUserValSchema),
   async (req, res, next) => {
     try {
       const {
@@ -55,11 +55,10 @@ router.post(
           await addUser(email, hash, hash, phone, firstName, lastName);
           const user = await getUserByEmail(email);
           const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
-          // console.log("user", user);
+
           res.send({ user: { email, token } });
         }
       });
-      // res.send({ user: newUser });
     } catch (error) {
       next(error);
     }
@@ -84,7 +83,7 @@ router.post("/login", async (req, res, next) => {
           token,
           user: {
             email: user.email,
-            //created_date: user.created_date,
+
             id: user.id,
           },
         });
@@ -101,7 +100,7 @@ router.put("/:id", auth, async (req, res, next) => {
   bcrypt.hash(req.body.editedUser.password, 10, async (err, hash) => {
     req.body.editedUser.password = hash;
     req.body.editedUser.passwordCheck = hash;
-    // const { id } = req.user.id
+
     try {
       res.json(await updateUser(id, req.body.editedUser));
     } catch (err) {
@@ -114,7 +113,6 @@ router.delete("/:userId", auth, async (req, res) => {
   const curUserId = req.user.id;
   const { userId } = req.params;
 
-  // const pet = await getPetById(petId);
   const user = await getUserById(curUserId);
   const canDeleteUser = user.role === "admin";
   if (!canDeleteUser) {

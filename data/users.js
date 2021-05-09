@@ -1,6 +1,5 @@
 const { query } = require("../lib/database");
 const SQL = require("@nearform/sql");
-const { CodeGen } = require("ajv");
 
 function addUser(
   email,

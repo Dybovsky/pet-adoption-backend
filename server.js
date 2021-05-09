@@ -20,13 +20,7 @@ app.use(express.json());
 app.use("/users", require("./routes/users"));
 app.use("/pet", require("./routes/pets"));
 
-//
-// app.post("/uploadFile", upload.single("my_file"), async (req, res) => {
-//   res.send("uploaded");
-// });
-
 app.use("/" + uploadedFilesFolder, express.static(uploadedFilesFolder));
-//
 
 const port = +process.env.PORT;
 const host = process.env.HOST;

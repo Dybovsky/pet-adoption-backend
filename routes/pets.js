@@ -3,7 +3,7 @@ const router = express.Router();
 const fs = require("fs");
 
 const { uploadToCloudinary } = require("../lib/cloudinary");
-const { pool, query } = require("../lib/database");
+
 const {
   getPets,
   addPet,
@@ -11,18 +11,18 @@ const {
   getPetById,
   deletePetById,
   updatePetPicture,
-  updatePet,
+
   addOwner,
   changeStatus,
   returnPet,
-  getPetByType,
+
   getPetsByAdvSearch,
   savePet,
   unsavePet,
   getSavedPets,
   getAuthPets,
 } = require("../data/pets");
-//const { host, port } = require("../server");
+
 const { isAdmin } = require("../middlewares/admin");
 const { upload } = require("../middlewares/multipart");
 const getValMiddleware = require("../middlewares/validation");
@@ -49,10 +49,6 @@ router.get("/all_pets/", auth, async (req, res, next) => {
     next(err);
   }
 });
-
-// app.post("/uploadFile", upload.single("my_file"), async (req, res) => {
-//   res.send("uploaded");
-// });
 
 //add pet
 router.post(
@@ -90,7 +86,7 @@ router.post(
         allergy,
         diet
       );
-      // console.log("posted");
+
       res.status(201).send(`Pet ${name} added`);
     } catch (err) {
       next(err);
@@ -98,7 +94,6 @@ router.post(
   }
 );
 
-//or isAdmin middleware must use for chnge user settings
 function isSameUser(req, res, next) {
   if (req.user.id !== req.params.userId) {
     res.status(403).send({ message: "Only the same user can access" });
@@ -109,15 +104,13 @@ function isSameUser(req, res, next) {
 //
 router.put(
   "/picture/:petID",
-  // "/:userId/picture",
-  // isSameUser 40 min
+
   auth,
   upload.single("image"),
   async (req, res) => {
     try {
       const result = await uploadToCloudinary(req.file.path);
-      // console.log("res", result.secure_url);
-      // console.log(result, "res");
+
       await updatePetPicture(req.params.petID, result.secure_url);
       fs.unlinkSync(req.file.path);
       res.send({ picture: result.secure_url });
@@ -125,18 +118,7 @@ router.put(
       console.error(err);
     }
   }
-  // frontend formData.append
 );
-
-//save pet
-// router.put(':id/save', async(req, res, next) => {
-//   try{
-//     const { id } = req.params;
-//     const result = savePet(id, //?userId)
-//   }catch(err){
-//     next(err)
-//   }
-// })
 
 //show my pets
 router.get("/user/my", auth, async (req, res, next) => {
@@ -156,7 +138,6 @@ router.get("/user/my", auth, async (req, res, next) => {
 router.get("/user/:id", auth, async (req, res, next) => {
   try {
     const userId = req.params;
-    //req.user.id;
 
     const usersPets = await getPetsByUserId(userId);
     res.send({ usersPets });
@@ -166,7 +147,7 @@ router.get("/user/:id", auth, async (req, res, next) => {
 });
 
 //delete pet by id
-//make return intead of del
+
 router.delete("/:petId", auth, async (req, res) => {
   try {
     const userId = req.user.id;
@@ -189,7 +170,7 @@ router.get("/getPet/:petId", async (req, res) => {
   try {
     const { petId } = req.params;
     const response = await getPetById(petId);
-    // console.log(response, "resp");
+
     res.send({ response });
   } catch (err) {
     console.error(err);
@@ -206,10 +187,7 @@ router.put(
     try {
       const { editedPet } = req.body;
       const { petId } = req.params;
-      // console.log("body", req.body);
 
-      //const response = await updatePet(petId, editedPet);
-      // console.log(response, "resp");
       res.send({ response });
     } catch (err) {
       console.error(err);
@@ -223,16 +201,11 @@ router.post("/take_pet/:petId/:status", auth, async (req, res) => {
   try {
     const userId = req.user.id;
     const { petId, status } = req.params;
-    // const pet = await getPetById(petId)
-    // if (!pet.Owner_id === null){
-    //   return;
-    //   res.send({message: 'Some'})
-    // }
+
     addOwner(petId, userId);
     changeStatus(petId, status);
 
     res.status(201).send(`user ${userId} now own this pet`);
-    //addToMyPets(petId)
   } catch (err) {
     console.log(err);
   }
@@ -284,20 +257,11 @@ router.get("/saved_pets/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const response = await getSavedPets(userId);
-    // console.log(response, "resp");
+
     res.send(response);
   } catch (err) {
     console.error(err);
   }
 });
 
-// router.get("/query/type=:type", async (req, res) => {
-//   try {
-//     const { type } = req.params;
-//     const response = await getPetByType(type);
-//     res.send({ response });
-//   } catch (err) {
-//     console.error(err);
-//   }
-// });
 module.exports = router;

@@ -5,7 +5,7 @@ const NewPetValSchema = S.object()
   .prop("breed", S.string().minLength(1).required())
   .prop("type", S.string().minLength(1).required())
   .prop("status", S.string().minLength(1).required())
-  // .prop("picture", S.string().minLength(3).required())
+
   .prop("height", S.string().minLength(1).required())
   .prop("weight", S.string().minLength(1).required())
   .prop("color", S.string().minLength(1).required())
