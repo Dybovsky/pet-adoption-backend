@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "deploy": "sudo heroku container:push web && heroku container:release web",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=local nodemon server.js | pino-pretty",
     "start": "NODE_ENV=production node server.js"
