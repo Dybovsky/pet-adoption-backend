@@ -9,6 +9,7 @@ if (result.error) {
 
 const express = require("express");
 const cors = require("cors");
+const pino = require("pino-http");
 
 const { postgrator } = require("./lib/database");
 const { uploadedFilesFolder } = require("./middlewares/multipart");
@@ -16,10 +17,10 @@ const { uploadedFilesFolder } = require("./middlewares/multipart");
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(pino({ level: process.env.LOG_LEVEL }));
 
 app.use("/users", require("./routes/users"));
 app.use("/pet", require("./routes/pets"));
-
 app.use("/" + uploadedFilesFolder, express.static(uploadedFilesFolder));
 
 const port = +process.env.PORT;
